@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block title %}Заказ №{{ order.id }}{% endblock %}
+{% block page_title %}Заказ №{{ order.id }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <a href="{% url 'order_list' %}" class="btn btn-secondary">← К списку заказов</a>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header bg-secondary-custom">
+                    <h5 class="mb-0">Информация о заказе</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Дата заказа:</strong> {{ order.order_date|date:"d.m.Y H:i" }}</p>
+                    {% if order.delivery_date %}
+                    <p><strong>Дата доставки:</strong> {{ order.delivery_date|date:"d.m.Y" }}</p>
+                    {% endif %}
+                    <p><strong>Клиент:</strong> {{ order.user.get_full_name }}</p>
+                    <p><strong>Статус:</strong> 
+                        <span class="badge 
+                            {% if order.status == 'new' %}bg-primary
+                            {% elif order.status == 'processing' %}bg-warning
+                            {% elif order.status == 'completed' %}bg-success
+                            {% elif order.status == 'cancelled' %}bg-danger
+                            {% endif %}">
+                            {{ order.get_status_display }}
+                        </span>
+                    </p>
+                </div>
+            </div>
+            
+            <div class="card mb-4">
+                <div class="card-header bg-secondary-custom">
+                    <h5 class="mb-0">Доставка</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Пункт выдачи:</strong><br>
+                        {{ order.pickup_point|default:"Не указан" }}
+                    </p>
+                    <p><strong>Адрес доставки:</strong><br>
+                        {{ order.delivery_address|default:"Не указан" }}
+                    </p>
+                    {% if order.pickup_code %}
+                    <p><strong>Код получения:</strong> 
+                        <span class="badge bg-dark">{{ order.pickup_code }}</span>
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header bg-secondary-custom">
+                    <h5 class="mb-0">Состав заказа</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Товар</th>
+                                <th>Количество</th>
+                                <th>Цена</th>
+                                <th>Сумма</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in order.items.all %}
+                            <tr>
+                                <td>{{ item.product.name }}</td>
+                                <td>{{ item.quantity }} {{ item.product.unit.name }}</td>
+                                <td>{{ item.price_at_order|floatformat:2 }} ₽</td>
+                                <td>{{ item.total_price|floatformat:2 }} ₽</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="3" class="text-end">Итого:</th>
+                                <th>{{ order.total_amount|floatformat:2 }} ₽</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {% if is_admin %}
+    <div class="mt-4">
+        <a href="{% url 'order_edit' order.pk %}" class="btn btn-warning">Редактировать заказ</a>
+        <a href="{% url 'order_delete' order.pk %}" class="btn btn-danger">Удалить заказ</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

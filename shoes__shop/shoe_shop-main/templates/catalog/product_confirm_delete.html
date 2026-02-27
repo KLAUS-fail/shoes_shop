@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Удаление товара{% endblock %}
+{% block page_title %}Подтверждение удаления{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0">Удаление товара</h4>
+                </div>
+                <div class="card-body">
+                    <p class="lead">Вы уверены, что хотите удалить товар?</p>
+                    
+                    <div class="alert alert-warning">
+                        <strong>{{ product.name }}</strong><br>
+                        Категория: {{ product.category.name }}<br>
+                        Производитель: {{ product.manufacturer.name }}<br>
+                        Цена: {{ product.price }} ₽<br>
+                        {% if product.discount > 0 %}
+                            Скидка: {{ product.discount }}%<br>
+                        {% endif %}
+                        Остаток: {{ product.stock_quantity }} {{ product.unit.name }}
+                    </div>
+                    
+                    <p class="text-danger">
+                        <strong>Внимание!</strong> Это действие нельзя отменить.
+                    </p>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="d-flex justify-content-between">
+                            <button type="submit" class="btn btn-danger">Да, удалить</button>
+                            <a href="{% url 'product_list' %}" class="btn btn-secondary">Отмена</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

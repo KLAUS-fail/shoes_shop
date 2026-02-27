@@ -1,0 +1,322 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Магазин обуви{% endblock %}</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{% static 'icons/Icon.ico' %}">
+    <link rel="shortcut icon" href="{% static 'icons/Icon.ico' %}">
+    <link rel="icon" type="image/png" href="{% static 'icons/Icon.png' %}">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Основные стили в соответствии с руководством */
+        * {
+            font-family: 'Times New Roman', Times, serif !important;
+        }
+        
+        body {
+            background-color: #FFFFFF;
+            color: #000000;
+        }
+        
+        /* Дополнительный фон */
+        .bg-secondary-custom {
+            background-color: #7FFF00 !important;
+        }
+        
+        /* Акцентирование внимания */
+        .btn-accent {
+            background-color: #00FA9A !important;
+            border-color: #00FA9A !important;
+            color: #000000 !important;
+        }
+        
+        .btn-accent:hover {
+            background-color: #00CC7A !important;
+            border-color: #00CC7A !important;
+        }
+        
+        /* Подсветка для больших скидок */
+        .big-discount-card {
+            background-color: #2E8B57 !important;
+            color: white;
+        }
+        
+        .big-discount-card .card-title,
+        .big-discount-card .list-unstyled {
+            color: white;
+        }
+        
+        .big-discount-card .old-price {
+            color: #ffcccc !important;
+        }
+        
+        .big-discount-card .current-price {
+            color: white;
+        }
+        
+        /* Товары не в наличии */
+        .out-of-stock-card {
+            background-color: #e3f2fd !important;
+        }
+        
+        /* Стили для цен */
+        .old-price {
+            text-decoration: line-through;
+            color: red;
+            margin-right: 10px;
+            font-size: 0.9em;
+        }
+        
+        .current-price {
+            color: black;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        
+        /* Карточки товаров */
+        .product-card {
+            transition: transform 0.2s;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        /* Заголовки */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Times New Roman', Times, serif;
+            font-weight: bold;
+        }
+        
+        /* Навигационная панель */
+        .navbar {
+            background-color: #2c3e50 !important;
+        }
+        
+        .navbar-brand {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        /* Кнопки */
+        .btn {
+            border-radius: 4px;
+            font-family: 'Times New Roman', Times, serif;
+        }
+        
+        .btn-primary {
+            background-color: #00FA9A;
+            border-color: #00FA9A;
+            color: #000000;
+        }
+        
+        .btn-primary:hover {
+            background-color: #00CC7A;
+            border-color: #00CC7A;
+        }
+        
+        .btn-success {
+            background-color: #7FFF00;
+            border-color: #7FFF00;
+            color: #000000;
+        }
+        
+        .btn-success:hover {
+            background-color: #66CC00;
+            border-color: #66CC00;
+        }
+        
+        /* Таблицы */
+        .table {
+            font-family: 'Times New Roman', Times, serif;
+        }
+        
+        .table thead {
+            background-color: #7FFF00;
+        }
+        
+        /* Уведомления */
+        .alert {
+            border-radius: 4px;
+            font-family: 'Times New Roman', Times, serif;
+        }
+        
+        .alert-info {
+            background-color: #7FFF00;
+            color: #000000;
+            border-color: #66CC00;
+        }
+        
+        .alert-success {
+            background-color: #00FA9A;
+            color: #000000;
+            border-color: #00CC7A;
+        }
+        
+        /* Формы */
+        .form-control, .form-select {
+            border-radius: 4px;
+            border: 1px solid #ced4da;
+            padding: 8px 12px;
+            font-family: 'Times New Roman', Times, serif;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: #00FA9A;
+            box-shadow: 0 0 0 0.2rem rgba(0, 250, 154, 0.25);
+        }
+        
+        .form-label {
+            font-family: 'Times New Roman', Times, serif;
+            font-weight: bold;
+        }
+        
+        /* Карточки */
+        .card {
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .card-header {
+            background-color: #7FFF00;
+            color: #000000;
+            font-weight: bold;
+            border-bottom: none;
+        }
+        
+        .card-header.bg-primary {
+            background-color: #00FA9A !important;
+            color: #000000;
+        }
+        
+        .card-header.bg-success {
+            background-color: #7FFF00 !important;
+            color: #000000;
+        }
+        
+        .card-header.bg-danger {
+            background-color: #dc3545 !important;
+            color: white;
+        }
+        
+        /* Пагинация */
+        .pagination .page-link {
+            color: #000000;
+            background-color: #FFFFFF;
+            border: 1px solid #7FFF00;
+        }
+        
+        .pagination .page-item.active .page-link {
+            background-color: #00FA9A;
+            border-color: #00FA9A;
+            color: #000000;
+        }
+        
+        /* Логотип */
+        .logo {
+            height: 40px;
+            width: auto;
+            object-fit: contain;
+            margin-right: 10px;
+        }
+        
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .card-img-top {
+                height: 150px !important;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="{% url 'product_list' %}">
+                <img src="{% static 'icons/Icon.png' %}" alt="Логотип" class="logo" height="30">
+                 Магазин обуви
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <span class="nav-link text-light">
+                                {{ user.get_full_name }} 
+                                {% if user_role %}
+                                    <span class="badge bg-secondary">{{ user_role }}</span>
+                                {% endif %}
+                            </span>
+                        </li>
+                        
+                        <!-- Пункт "Заказы" для менеджера и админа -->
+                        {% if is_manager or is_admin %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'order_list' %}">Заказы</a>
+                        </li>
+                        {% endif %}
+                        
+                        <!-- Каталог товаров -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'product_list' %}">Каталог</a>
+                        </li>
+                        
+                        {% if user.is_superuser %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="/admin/">Админка</a>
+                        </li>
+                        {% endif %}
+                        
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'logout' %}">Выйти</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'login' %}">Войти</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'guest_login' %}">Как гость</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <!-- Заголовок страницы -->
+        <h1 class="mb-4">{% block page_title %}{% endblock %}</h1>
+        
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Дополнительные скрипты -->
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
